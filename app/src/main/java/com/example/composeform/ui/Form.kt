@@ -1,6 +1,5 @@
 package com.example.composeform.ui
 
-import android.widget.CheckBox
 import android.widget.Toast
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Column
@@ -13,30 +12,34 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ContextAmbient
+import com.example.data.ElementDto
 
-data class Form (
-    val prompts: List<FormElement>? = null,
-    val submitLabel: String? = "",
-    val path: String? = ""
-) : ComposableJson {
+class FormElement (
+    val elementDto: ElementDto
+) : ComposableElement {
     @Composable
-    override fun compose() {
-        val fields = prompts?.map { remember { mutableStateOf(it.initValue?:"") }}?:listOf()
+    override fun compose(hoist: Map<String, MutableState<String>>) {
+        val children = elementDto.children?.map { it.getComposableElement() } ?: listOf()
+        val fields = children.map { remember { it.getHoist() } } 
         Column {
-            prompts?.zip(fields)?.map {
+            children.zip(fields).map {
                 it.first.compose(it.second)
             }
             val context = ContextAmbient.current
             Button(onClick = {
-                Toast.makeText(context, fields.joinToString { it.value }, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, fields.joinToString { it.get("value")?.value?:"" }, Toast.LENGTH_LONG).show()
             }){
-                Text(submitLabel?:"")
+                Text(elementDto.label?:"")
             }
         }
     }
+
+    override fun getHoist(): Map<String, MutableState<String>> {
+        return mapOf()
+    }
 }
 
-data class FormElement (
+data class FormElementOld (
     val prompt: String?,
     val initValue: String? = "",
     val type: String? = "TextField"
