@@ -1,20 +1,26 @@
 package com.example.composeform.ui
 
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.Checkbox
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.example.data.ElementDto
 
-class TextFieldElement(val elementDto: ElementDto) : ComposableElement {
+class CheckBoxElement(val elementDto: ElementDto) : ComposableElement {
     val fieldName = elementDto.data?:"value"
     @Composable
     override fun compose(hoist: Map<String, MutableState<String>>) {
-        TextField(value = hoist.get(fieldName)?.value?:"", onValueChange = {hoist.get(fieldName)?.value = it}, label = { Text (elementDto.label?:"") })
+        Row {
+            Checkbox(checked = hoist.get(fieldName)?.value.equals("true", true), onCheckedChange = {it -> hoist.get(fieldName)?.value = it.toString()})
+            Text (elementDto.label?:"")
+        }
     }
 
     override fun getHoist(): Map<String, MutableState<String>> {
         return mapOf(Pair(fieldName, mutableStateOf(elementDto.default?:"")))
     }
 }
+

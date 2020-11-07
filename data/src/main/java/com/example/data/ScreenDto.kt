@@ -13,14 +13,14 @@ data class ElementDto (
     val children: List<ElementDto>? = null,
     val label: String? = null,
     val viewtype: ViewType? = null,
-    val default: String? = null
+    val default: String? = null,
+    val data: String? = null
 )
 
 enum class ViewType {
     TEXT,
     TEXTFIELD,
     CHECKBOX,
-    FORM,
-    BUTTON
+    FORM
 }
 

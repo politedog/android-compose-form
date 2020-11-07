@@ -17,7 +17,7 @@ class Screen ( screenDto: ScreenDto ) {
     @Composable
     fun compose() {
         Column {
-            val fields = elements.map { remember { it.getHoist() } }
+            val fields = elements.map { it.getHoist() }
             Column {
                 elements.zip(fields).map {
                     it.first.compose(it.second)
@@ -42,7 +42,6 @@ class EmptyElement : ComposableElement {
     override fun getHoist(): Map<String, MutableState<String>> {
         return mapOf()
     }
-
 }
 
 fun ElementDto.getComposableElement(): ComposableElement {
@@ -50,8 +49,7 @@ fun ElementDto.getComposableElement(): ComposableElement {
         ViewType.TEXTFIELD -> TextFieldElement(this)
         ViewType.TEXT -> TextElement(this)
         ViewType.FORM -> FormElement(this)
-        //ViewType.BUTTON -> ButtonElement(this)
-        //ViewType.CHECKBOX -> CheckBoxElement(this)
+        ViewType.CHECKBOX -> CheckBoxElement(this)
         else -> EmptyElement()
     }
 }
